@@ -9,9 +9,19 @@ import { ITheme } from '@uifabric/styling';
 import SearchBoxAutoComplete from '../SearchBoxAutoComplete/SearchBoxAutoComplete';
 import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
 import { IconButton } from 'office-ui-fabric-react/lib/Button';
+import { Checkbox } from 'office-ui-fabric-react';
+/*
+    Change Notes:
+        + searchPrefix attribute for searchby check boxes
+        + update onChange to cater for serachby prefixes if set
+        + add event handler to set searchInputValue state
+        + event details are {term:"yoursearchterm", searchprefix: "yoursearchprefix"}
+        + dynamic data controller will use search prefix + query
+
+*/
 
 export default class SearchBoxContainer extends React.Component<ISearchBoxContainerProps, ISearchBoxContainerState> {
-
+    private searchPrefix: string = "";
     public constructor(props: ISearchBoxContainerProps) {
 
         super(props);
@@ -23,7 +33,18 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
         };
 
         this._onSearch = this._onSearch.bind(this);
+        this._onChange = this._onChange.bind(this);
     }
+
+    componentDidMount(){
+        window.addEventListener("BBSearchboxUpdate",(e:any) =>{ this.updateTerm(e.detail.term,e.detail.searchPrefix)})
+      }
+    
+    private updateTerm(term:string, searchPrefix:string){
+        this.searchPrefix = searchPrefix;
+        this.setState({ searchInputValue: term })
+    }
+
 
     private renderSearchBoxWithAutoComplete(): JSX.Element {
         return (
@@ -47,7 +68,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
                     className={styles.searchTextField}
                     value={this.state.searchInputValue}
                     autoComplete="off"
-                    onChange={(value) => this.setState({ searchInputValue: value })}
+                    onChange={(value) => this._onChange(value)}
                     onSearch={() => this._onSearch(this.state.searchInputValue)}
                     onClear={() => this._onSearch('', true)}
                 />
@@ -61,6 +82,18 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
                 </div>
             </div>
         );
+    }
+
+    private _onChange(value){
+        if(this.searchPrefix && !value){ //no value but prefix set
+            this.setState({ searchInputValue: this.searchPrefix });
+        }
+        else if (this.searchPrefix.length > value.length){ // value but less than prefix
+            this.setState({ searchInputValue: this.searchPrefix });
+        }
+        else { // no prefix
+            this.setState({ searchInputValue: value });
+        }
     }
 
     /**
@@ -104,7 +137,10 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
             } else {
 
                 // Notify the dynamic data controller
-                this.props.onSearch(query);
+                var dynamicQuery = this.searchPrefix && !query ? this.searchPrefix : query;
+                this.props.onSearch(dynamicQuery);
+                
+                
             }
         }
     }
