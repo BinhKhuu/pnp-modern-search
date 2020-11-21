@@ -26,7 +26,8 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
 
         this.state = {
             items: [],
-            groups: []
+            groups: [],
+            nonGrouped: []
         };
 
         this._removeAllFilters = this._removeAllFilters.bind(this);
@@ -37,8 +38,9 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
     public render(): React.ReactElement<IFilterLayoutProps> {
 
         let noResultsElement: JSX.Element;
-
-        const renderAvailableFilters = (this.props.refinementResults.length > 0) ? <GroupedList
+        console.log("item",this.state.items)
+        console.log("nonGrouped", this.state.nonGrouped)
+        const renderAvailableFilters = (this.props.refinementResults.length > 0 ) ? <GroupedList
             ref='groupedList'
             items={this.state.items}
             componentRef={(g) => { this._groupedList = g; }}
@@ -70,6 +72,15 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
                 maxHeight: 'inherit'
             }}>
                 <div className={styles.verticalLayout__filterPanel__body} data-is-scrollable={true}>
+                    {this.state.nonGrouped.map((ng)=>{ 
+                        return ( 
+                            <div>
+                                <h3>{ng.name}</h3>
+                                {this.state.items[ng.key]}
+                            </div>
+                            
+                            )
+                        })}
                     {renderAvailableFilters}
                     {renderLinkRemoveAll}
                 </div>
@@ -137,10 +148,16 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
     private _initGroups(props: IFilterLayoutProps, shouldResetCollapse?: boolean) {
 
         let groups: IGroup[] = [];
+        console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++",props)
+
+       var nonGroup = [];
+        var refinementconfig = this.props.refinersConfiguration;
+
         props.refinementResults.map((refinementResult, i) => {
 
             // Get group name
             let groupName = refinementResult.FilterName;
+            console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^&&&",refinementResult)
             const configuredFilters = props.refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName; });
             groupName = configuredFilters.length > 0 && configuredFilters[0].displayValue ? configuredFilters[0].displayValue : groupName;
             let isCollapsed = true;
@@ -164,11 +181,20 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
                 isCollapsed: isCollapsed
             };
 
-            groups.push(group);
+            refinementconfig.filter((config)=>{
+                if(config.refinerName == refinementResult.FilterName){
+                    if(config.template == 10) nonGroup.push(group)
+                    else groups.push(group);
+                }
+            })
+            
         });
 
+
+
         this.setState({
-            groups: update(this.state.groups, { $set: groups })
+            groups: update(this.state.groups, { $set: groups }),
+            nonGrouped: update(this.state.nonGrouped, {$set: nonGroup})
         });
     }
 

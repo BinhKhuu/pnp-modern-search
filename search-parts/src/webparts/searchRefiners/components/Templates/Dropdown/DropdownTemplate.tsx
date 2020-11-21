@@ -47,7 +47,7 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
         this.props.refinementResult.Values.filter(x => { return !this._isFilterMatch(x);}).map((refinementValue: IRefinementValue, j) => {
             console.log(refinementValue)
             var key = refinementValue.RefinementToken;
-            var value = refinementValue.RefinementName;
+            var value = refinementValue.RefinementValue;
             var opt: IDropdownOption = {key:key,text:value};
             ddOptions.push(opt);
         })
@@ -75,22 +75,32 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
 
                     : null
             }
-            {
-                    <Dropdown
-                        options={ddOptions}
-                        //selectedKey={this.state.selectedItems}
-                        multiSelect={true}
-                        onChange={(ev, option) => {
-                            console.log("ASDFASDFASDf",option)
-                            var refinementValue = this.props.refinementResult.Values.filter((val)=>{
-                                if(val.RefinementToken == option.key) return true;
-                            })
-                            console.log('refinementval', refinementValue)
-                            if(refinementValue.length) this._onFilterAdded(refinementValue[0])
-                        }} 
-                    >
+            {     
+                    <div>
+                        <Dropdown
+                            options={ddOptions}
+                            //selectedKey={this.state.selectedItems}
+                            multiSelect={true}
+                            selectedKeys={["range(min, 2017-12-01T23:30:15.0000640Z)"]}
+                            onChange={(ev, option) => {
+                                console.log("ASDFASDFASDf",option)
+                                console.log("ASDFASDFASDF",this.props)
+                                if(option.selected){
+                                    var refinementValue = this.props.refinementResult.Values.filter((val)=>{
+                                        if(val.RefinementToken == option.key) return true;
+                                    })
+                                    console.log('refinementval', refinementValue)
+                                    if(refinementValue.length) this._onFilterAdded(refinementValue[0])
+                                }
+                                else {
+                                    this._clearFilters();
+                                }
 
-                    </Dropdown>
+                            }} 
+                        >
+
+                        </Dropdown>
+                    </div>
 
             }
             {
@@ -163,7 +173,8 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
      * @param addedValue the filter value added
      */
     private _onFilterAdded(addedValue: IRefinementValue) {
-
+        console.log("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",addedValue)
+        //set state for selectedItems using addedValue.RefinementToken
         let newFilterValues = update(this.state.refinerSelectedFilterValues, { $push: [addedValue] });
 
         this.setState({
@@ -183,7 +194,7 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
      * @param removedValue the filter value removed
      */
     private _onFilterRemoved(removedValue: IRefinementValue) {
-
+        //remove value by poping addedValue.RefinementToken
         const newFilterValues = this.state.refinerSelectedFilterValues.filter((elt) => {
             return elt.RefinementValue !== removedValue.RefinementValue;
         });
