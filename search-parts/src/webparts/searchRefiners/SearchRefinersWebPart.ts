@@ -74,7 +74,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
         let defaultSelectedFilters: IRefinementFilter[] = [];
 
         if (this.properties.searchResultsDataSourceReference) {
-
+            console.log("!@#$$^%#$%^&#$&")
             // If the dynamic property exists, it means the Web Part ins connected to a search results Web Part
             if (this._searchResultSourceData) {
                 const searchResultSourceData: ISearchResultSourceData = this._searchResultSourceData.tryGetValue();
@@ -87,6 +87,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                     queryTemplate = (searchServiceConfig.queryTemplate) ? searchServiceConfig.queryTemplate : '';
                     resultSourceId = searchServiceConfig.resultSourceId;
                     defaultSelectedFilters = searchResultSourceData.defaultSelectedRefinementFilters;
+                    console.log("DEFFFFFFFFFFFF",defaultSelectedFilters)
                     if (searchResultSourceData.filterReset && this._selectedFilters.length > 0) {
                         this._selectedFilters = [];
                     }
@@ -279,6 +280,10 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                             {
                                 key: RefinerTemplateOption.ContainerTree,
                                 text: strings.Refiners.Templates.ContainerTreeRefinementItemTemplateLabel
+                            },
+                            {
+                                key: RefinerTemplateOption.Dropdown,
+                                text: "Binh Dropdown option"
                             }
                         ]
                     },
