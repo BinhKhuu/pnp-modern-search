@@ -204,7 +204,7 @@ export default class TemplateRenderer extends React.Component<ITemplateRendererP
             isMultiValue={true}
             themeVariant={this.props.themeVariant}
             removeFilterValue={this.props.valueToRemove}
-            selectedValues={selectedValues} 
+            selectedValues={this.props.selectedValues} 
             showValueFilter={this.props.showValueFilter}
           />;
           break;

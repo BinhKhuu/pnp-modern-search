@@ -12,7 +12,7 @@ interface IBaseRefinerTemplateState {
      * Value on which refinement values will be filtered
      */
     valueFilter?: string;
-    selectedItems?: IDropdownOption[];
+    selectedItems?: any;
 } 
 
 export default IBaseRefinerTemplateState;

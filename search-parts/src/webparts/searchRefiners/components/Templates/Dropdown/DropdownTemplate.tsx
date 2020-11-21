@@ -22,7 +22,7 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
        
         this.state = {
             refinerSelectedFilterValues: [],
-            selectedItems: [{key:"",text:""}]
+            selectedItems: this.props.selectedValues
         
         };
 
@@ -55,14 +55,17 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
 
         return <div className={"bbDropdown"}>
             {
+                /*
                 this.props.showValueFilter ?
                     <div className="pnp-value-filter-container">
                         <TextField className="pnp-value-filter" value={this.state.valueFilter} placeholder="Filter" onChange={(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,newValue?: string) => { this._onValueFilterChanged(newValue); }} onClick={this._onValueFilterClick} />
                         <Link onClick={this._clearValueFilter} disabled={!this.state.valueFilter || this.state.valueFilter === ""}>Clear</Link>
                     </div>
                     : null
+                    */
             }
             {
+                /*
                 this.props.isMultiValue && this.props.refinementResult.Values.length > 5 ?
 
                     <div>
@@ -74,6 +77,7 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
                     </div>
 
                     : null
+                    */
             }
             {     
                     <div>
@@ -81,7 +85,7 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
                             options={ddOptions}
                             //selectedKey={this.state.selectedItems}
                             multiSelect={true}
-                            selectedKeys={["range(min, 2017-12-01T23:30:15.0000640Z)"]}
+                            selectedKeys={this.state.selectedItems}
                             onChange={(ev, option) => {
                                 console.log("ASDFASDFASDf",option)
                                 console.log("ASDFASDFASDF",this.props)
@@ -93,7 +97,16 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
                                     if(refinementValue.length) this._onFilterAdded(refinementValue[0])
                                 }
                                 else {
-                                    this._clearFilters();
+                                    if(this.state.selectedItems.length > 0){
+                                        var refinementValue = this.props.refinementResult.Values.filter((val)=>{
+                                            if(val.RefinementToken == option.key) return true;
+                                        })
+                                        if(refinementValue.length) this._onFilterRemoved(refinementValue[0])
+                                    }
+                                    else {
+                                        this._clearFilters();
+                                    }
+                                    
                                 }
 
                             }} 
@@ -104,17 +117,19 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
 
             }
             {
+                
                 this.props.isMultiValue ?
 
                     <div>
                         <Link
                             theme={this.props.themeVariant as ITheme}
                             onClick={() => { this._applyFilters(this.state.refinerSelectedFilterValues); }}
-                            disabled={disableButtons}>{"strings.Refiners.ApplyFiltersLabel"}
-                        </Link>|<Link theme={this.props.themeVariant as ITheme}  onClick={this._clearFilters} disabled={this.state.refinerSelectedFilterValues.length === 0}>{"strings.Refiners.ClearFiltersLabel"}</Link>
+                            disabled={disableButtons}>{"Apply filters"}
+                        </Link>{'\u00A0'}|{'\u00A0'}<Link theme={this.props.themeVariant as ITheme}  onClick={this._clearFilters} disabled={this.state.refinerSelectedFilterValues.length === 0}>{"Clear filters"}</Link>
                     </div>
 
                     : null
+                    
             }
         </div>;
     }
@@ -136,6 +151,7 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
         if (nextProps.shouldResetFilters) {
             this.setState({
                 refinerSelectedFilterValues: [],
+                selectedItems:[]
             });
         }
 
@@ -176,17 +192,19 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
         console.log("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",addedValue)
         //set state for selectedItems using addedValue.RefinementToken
         let newFilterValues = update(this.state.refinerSelectedFilterValues, { $push: [addedValue] });
+        let newSelectedItem = update(this.state.selectedItems,{$push: [addedValue.RefinementToken]})
 
         this.setState({
-            refinerSelectedFilterValues: newFilterValues
+            refinerSelectedFilterValues: newFilterValues,
+            selectedItems: newSelectedItem
         });
 
-        this._applyFilters(newFilterValues);
-        /*
+        //this._applyFilters(newFilterValues);
+        
         if (!this.props.isMultiValue) {
             this._applyFilters(newFilterValues);
         }
-        */
+        
     }
 
     /**
@@ -199,13 +217,19 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
             return elt.RefinementValue !== removedValue.RefinementValue;
         });
 
+        var newSelectedItems = this.state.selectedItems.filter((sel)=>{
+            return sel !== removedValue.RefinementToken;
+        })
         this.setState({
-            refinerSelectedFilterValues: newFilterValues
+            refinerSelectedFilterValues: newFilterValues,
+            selectedItems:newSelectedItems
         });
-
+        //this._applyFilters(newFilterValues);
+        
         if (!this.props.isMultiValue) {
             this._applyFilters(newFilterValues);
         }
+        
     }
 
     /**
@@ -222,7 +246,8 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
     private _clearFilters() {
 
         this.setState({
-            refinerSelectedFilterValues: []
+            refinerSelectedFilterValues: [],
+            selectedItems:[]
         });
 
         this._applyFilters([]);
@@ -245,7 +270,8 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
      */
     private _onValueFilterChanged(newValue: string) {
         this.setState({
-            valueFilter: newValue
+            valueFilter: newValue,
+            selectedItems:[]
         });
     }
 
@@ -254,7 +280,8 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
      */
     private _clearValueFilter() {
         this.setState({
-            valueFilter: ""
+            valueFilter: "",
+            selectedItems:[]
         });
     }
 
