@@ -245,7 +245,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
             selectedRefinementFilters: newFilters,
             shouldResetFilters: false
         });
-
+        console.log("^^^^^^^^^^^^^^^^^",newFilters)
         this.props.onUpdateFilters(newFilters);
     }
 

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import RefinerTemplateOption from '../../../../models/RefinerTemplateOption';
 import CheckboxTemplate from "./Checkbox/CheckboxTemplate";
+import DropdownTemplate from "./Dropdown/DropdownTemplate";
 import DateRangeTemplate from "./DateRange/DateRangeTemplate";
 import FixedDateRangeTemplate from "./FixedDateRange/FixedDateRangeTemplate";
 import PersonaTemplate from "./Persona/PersonaTemplate";
@@ -195,6 +196,18 @@ export default class TemplateRenderer extends React.Component<ITemplateRendererP
           />;
           break;
 
+        case RefinerTemplateOption.Dropdown:
+            renderTemplate= <DropdownTemplate         
+            refinementResult={this.props.refinementResult}
+            onFilterValuesUpdated={this.props.onFilterValuesUpdated}
+            shouldResetFilters={this.props.shouldResetFilters}
+            isMultiValue={true}
+            themeVariant={this.props.themeVariant}
+            removeFilterValue={this.props.valueToRemove}
+            selectedValues={selectedValues} 
+            showValueFilter={this.props.showValueFilter}
+          />;
+          break;
       default:
 
     }

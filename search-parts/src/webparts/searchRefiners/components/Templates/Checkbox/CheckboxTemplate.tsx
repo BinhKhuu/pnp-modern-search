@@ -193,6 +193,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
      * Applies all selected filters for the current refiner
      */
     private _applyFilters(updatedValues: IRefinementValue[]) {
+        console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
         this.props.onFilterValuesUpdated(this.props.refinementResult.FilterName, updatedValues, this._operator);
     }
 

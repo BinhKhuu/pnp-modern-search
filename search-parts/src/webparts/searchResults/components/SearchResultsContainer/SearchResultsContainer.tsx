@@ -337,7 +337,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         ...(resetSorting) && { sortDirection: this._defaultSortingValues.sortDirection },
                         ...(resetSorting) && { sortField: this._defaultSortingValues.sortField }
                     });
-
+                    
                     this.handleResultUpdateBroadCast(searchResults);
 
                 } catch (error) {

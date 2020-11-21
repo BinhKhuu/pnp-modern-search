@@ -2,6 +2,7 @@ import { IRefinementResult, IRefinementFilter, IRefinementValue } from "../../..
 import RefinementFilterOperationCallback from "../../../../models/RefinementValueOperationCallback";
 import IUserService from '../../../../services/UserService/IUserService';
 import { IReadonlyTheme } from "@microsoft/sp-component-base";
+import { IDropdownOption } from "office-ui-fabric-react";
 
 interface IBaseRefinerTemplateProps {
 
@@ -50,6 +51,7 @@ interface IBaseRefinerTemplateProps {
    * Indicates if the value filter should be visible
    */
   showValueFilter: boolean;
+
 }
 
 export default IBaseRefinerTemplateProps;
