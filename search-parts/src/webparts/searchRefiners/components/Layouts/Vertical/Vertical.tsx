@@ -38,8 +38,6 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
     public render(): React.ReactElement<IFilterLayoutProps> {
 
         let noResultsElement: JSX.Element;
-        console.log("item",this.state.items)
-        console.log("nonGrouped", this.state.nonGrouped)
         const renderAvailableFilters = (this.props.refinementResults.length > 0 ) ? <GroupedList
             ref='groupedList'
             items={this.state.items}
@@ -74,8 +72,8 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
                 <div className={styles.verticalLayout__filterPanel__body} data-is-scrollable={true}>
                     {this.state.nonGrouped.map((ng)=>{ 
                         return ( 
-                            <div>
-                                <h3>{ng.name}</h3>
+                            <div style={{margin: "5px"}}>
+                                <span className="bbRefinerTitle" style={{fontWeight:"bold"}}>{ng.name}</span>
                                 {this.state.items[ng.key]}
                             </div>
                             
@@ -148,16 +146,13 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
     private _initGroups(props: IFilterLayoutProps, shouldResetCollapse?: boolean) {
 
         let groups: IGroup[] = [];
-        console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++",props)
-
-       var nonGroup = [];
+        var nonGroup = [];
         var refinementconfig = this.props.refinersConfiguration;
 
         props.refinementResults.map((refinementResult, i) => {
 
             // Get group name
             let groupName = refinementResult.FilterName;
-            console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^&&&",refinementResult)
             const configuredFilters = props.refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName; });
             groupName = configuredFilters.length > 0 && configuredFilters[0].displayValue ? configuredFilters[0].displayValue : groupName;
             let isCollapsed = true;
@@ -216,7 +211,6 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
             // In this case we use the refiners global state to recreate the 'local' state for this component
             const selectedFilter = props.selectedFilters.filter(filter => { return filter.FilterName === refinementResult.FilterName; });
             const selectedFilterValues = selectedFilter.length === 1 ? selectedFilter[0].Values : [];
-
             items.push(
                 <TemplateRenderer
                     key={i}

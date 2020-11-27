@@ -1,6 +1,7 @@
 import * as React from "react";
 import IBaseRefinerTemplateProps from '../IBaseRefinerTemplateProps';
-import IBaseRefinerTemplateState from '../IBaseRefinerTemplateState';
+//import IBaseRefinerTemplateState from '../IBaseRefinerTemplateState';
+import IDropdownRefinerTemplateState from './DropdownTemplateState';
 import { IRefinementValue, RefinementOperator } from "../../../../../models/ISearchResult";
 import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 import { Text } from '@microsoft/sp-core-library';
@@ -13,7 +14,7 @@ import { selectProperties, TextField } from "office-ui-fabric-react";
 //CSS
 //import styles from './CheckboxTemplate.module.scss';
 
-export default class DropdownTemplate extends React.Component<IBaseRefinerTemplateProps, IBaseRefinerTemplateState> {
+export default class DropdownTemplate extends React.Component<IBaseRefinerTemplateProps, IDropdownRefinerTemplateState> {
 
     private _operator: RefinementOperator;
     
@@ -45,79 +46,47 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
 
         var ddOptions: IDropdownOption[] = new Array();
         this.props.refinementResult.Values.filter(x => { return !this._isFilterMatch(x);}).map((refinementValue: IRefinementValue, j) => {
-            console.log(refinementValue)
             var key = refinementValue.RefinementToken;
             var value = refinementValue.RefinementValue;
             var opt: IDropdownOption = {key:key,text:value};
             ddOptions.push(opt);
         })
-        
 
-        return <div className={"bbDropdown"}>
-            {
-                /*
-                this.props.showValueFilter ?
-                    <div className="pnp-value-filter-container">
-                        <TextField className="pnp-value-filter" value={this.state.valueFilter} placeholder="Filter" onChange={(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,newValue?: string) => { this._onValueFilterChanged(newValue); }} onClick={this._onValueFilterClick} />
-                        <Link onClick={this._clearValueFilter} disabled={!this.state.valueFilter || this.state.valueFilter === ""}>Clear</Link>
-                    </div>
-                    : null
-                    */
-            }
-            {
-                /*
-                this.props.isMultiValue && this.props.refinementResult.Values.length > 5 ?
-
-                    <div>
-                        <Link
-                            theme={this.props.themeVariant as ITheme}
-                            onClick={() => { this._applyFilters(this.state.refinerSelectedFilterValues); }}
-                            disabled={disableButtons}>{"strings.Refiners.ApplyFiltersLabel"}
-                        </Link>|<Link theme={this.props.themeVariant as ITheme}  onClick={this._clearFilters} disabled={this.state.refinerSelectedFilterValues.length === 0}>{"strings.Refiners.ClearFiltersLabel"}</Link>
-                    </div>
-
-                    : null
-                    */
-            }
+        return <div className={"bbDropdownRefiner"}>
             {     
-                    <div>
-                        <Dropdown
-                            options={ddOptions}
-                            //selectedKey={this.state.selectedItems}
-                            multiSelect={true}
-                            selectedKeys={this.state.selectedItems}
-                            onChange={(ev, option) => {
-                                console.log("ASDFASDFASDf",option)
-                                console.log("ASDFASDFASDF",this.props)
-                                if(option.selected){
+                <div>
+                    <Dropdown
+                        style={{maxWidth:"25%"}}
+                        styles={{dropdownOptionText:{whiteSpace:"normal",fontSize:"14px"}}}
+                        options={ddOptions}
+                        //selectedKey={this.state.selectedItems}
+                        multiSelect={true}
+                        selectedKeys={this.state.selectedItems}
+                        onChange={(ev, option) => {
+                            if(option.selected){
+                                var refinementValue = this.props.refinementResult.Values.filter((val)=>{
+                                    if(val.RefinementToken == option.key) return true;
+                                })
+                                if(refinementValue.length) this._onFilterAdded(refinementValue[0])
+                            }
+                            else {
+                                if(this.state.selectedItems.length > 0){
                                     var refinementValue = this.props.refinementResult.Values.filter((val)=>{
                                         if(val.RefinementToken == option.key) return true;
                                     })
-                                    console.log('refinementval', refinementValue)
-                                    if(refinementValue.length) this._onFilterAdded(refinementValue[0])
+                                    if(refinementValue.length) this._onFilterRemoved(refinementValue[0])
                                 }
                                 else {
-                                    if(this.state.selectedItems.length > 0){
-                                        var refinementValue = this.props.refinementResult.Values.filter((val)=>{
-                                            if(val.RefinementToken == option.key) return true;
-                                        })
-                                        if(refinementValue.length) this._onFilterRemoved(refinementValue[0])
-                                    }
-                                    else {
-                                        this._clearFilters();
-                                    }
-                                    
+                                    this._clearFilters();
                                 }
-
-                            }} 
-                        >
-
-                        </Dropdown>
-                    </div>
+                            }
+                        }} 
+                    >
+                    </Dropdown>
+                </div>
 
             }
             {
-                
                 this.props.isMultiValue ?
 
                     <div>
@@ -128,8 +97,7 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
                         </Link>{'\u00A0'}|{'\u00A0'}<Link theme={this.props.themeVariant as ITheme}  onClick={this._clearFilters} disabled={this.state.refinerSelectedFilterValues.length === 0}>{"Clear filters"}</Link>
                     </div>
 
-                    : null
-                    
+                    : null 
             }
         </div>;
     }
@@ -138,7 +106,6 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
 
         // Determine the operator according to multi value setting
         this._operator = this.props.isMultiValue ? RefinementOperator.OR : RefinementOperator.AND;
-
         // This scenario happens due to the behavior of the Office UI Fabric GroupedList component who recreates child components when a greoup is collapsed/expanded, causing a state reset for sub components
         // In this case we use the refiners global state to recreate the 'local' state for this component
         this.setState({
@@ -189,7 +156,6 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
      * @param addedValue the filter value added
      */
     private _onFilterAdded(addedValue: IRefinementValue) {
-        console.log("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",addedValue)
         //set state for selectedItems using addedValue.RefinementToken
         let newFilterValues = update(this.state.refinerSelectedFilterValues, { $push: [addedValue] });
         let newSelectedItem = update(this.state.selectedItems,{$push: [addedValue.RefinementToken]})
@@ -236,7 +202,6 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
      * Applies all selected filters for the current refiner
      */
     private _applyFilters(updatedValues: IRefinementValue[]) {
-        console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
         this.props.onFilterValuesUpdated(this.props.refinementResult.FilterName, updatedValues, this._operator);
     }
 

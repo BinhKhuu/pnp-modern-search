@@ -1,4 +1,3 @@
-import { IDropdownOption } from "office-ui-fabric-react";
 import { IRefinementFilter, IRefinementValue } from "../../../../models/ISearchResult";
 
 interface IBaseRefinerTemplateState {
@@ -12,7 +11,7 @@ interface IBaseRefinerTemplateState {
      * Value on which refinement values will be filtered
      */
     valueFilter?: string;
-    selectedItems?: any;
+
 } 
 
 export default IBaseRefinerTemplateState;

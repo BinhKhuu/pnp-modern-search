@@ -69,8 +69,14 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
         if (!this._initComplete) {
             return;
         }
-
+        console.log("Dynamic Data URL")
         let inputValue = this.properties.defaultQueryKeywords.tryGetValue();
+
+        //create search refiners here
+
+        //create search query here
+
+        //_onsearch copy the refiner template search functions
 
         if (inputValue) {
             if (typeof (inputValue) === 'string') {
@@ -107,7 +113,7 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
         }
 
         const enableSuggestions = this.properties.enableQuerySuggestions && this.properties.suggestionProviders.some(sp => sp.providerEnabled);
-
+        console.log(GlobalSettings.getValue('searchBoxquery'))
         const element: React.ReactElement<ISearchBoxContainerProps> = React.createElement(
             SearchBoxContainer, {
                 onSearch: this._onSearch,
@@ -233,7 +239,7 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
 
         // Save this value in a global context
         GlobalSettings.setValue('searchBoxQuery', searchQuery);
-
+        console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
         // Update URL with raw search query
         if (this.properties.useDynamicDataSource && this.properties.defaultQueryKeywords && this.properties.defaultQueryKeywords.reference) {
 
@@ -248,10 +254,11 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
                     window.history.pushState(undefined, undefined, `#${searchQuery}`);
                 }
                 else if (paramType.startsWith('queryParameters')) {
+                    
                     const paramChunks = paramType.split('.');
                     const queryTextParam = paramChunks.length === 2 ? paramChunks[1] : 'q';
                     const newUrl = UrlHelper.addOrReplaceQueryStringParam(window.location.href, queryTextParam, searchQuery);
-
+                    console.log("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",newUrl)
                     if (window.location.href !== newUrl) {
                         window.history.pushState({ path: newUrl }, undefined, newUrl);
                     }

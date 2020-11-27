@@ -243,7 +243,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
         // Get data from connected sources
         if (this._refinerSourceData && !this._refinerSourceData.isDisposed) {
-            console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
             const refinerSourceData: IRefinerSourceData = this._refinerSourceData.tryGetValue();
             if (refinerSourceData) {
                 refinerConfiguration = sortBy(refinerSourceData.refinerConfiguration, 'sortIdx');
@@ -1032,7 +1031,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
         // Get available data source Web Parts on the page
         const refinerWebParts = this._dynamicDataService.getAvailableDataSourcesByType(SearchComponentType.RefinersWebPart);
-        console.log('refinerweb',refinerWebParts)
         const searchVerticalsWebParts = this._dynamicDataService.getAvailableDataSourcesByType(SearchComponentType.SearchVerticalsWebPart);
 
         let useRefiners = this.properties.useRefiners;
@@ -1810,7 +1808,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     }
 
     public getPropertyValue(propertyId: string): ISearchResultSourceData {
-        console.log("%%%%%%%%%%%%%%%%%%")
         const refinementResults = (this._resultService && this._resultService.results) ? this._resultService.results.RefinementResults : [];
 
         const searchResultSourceData: ISearchResultSourceData = {
