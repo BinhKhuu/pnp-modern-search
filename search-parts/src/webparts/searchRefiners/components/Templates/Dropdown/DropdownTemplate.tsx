@@ -8,7 +8,7 @@ import { Text } from '@microsoft/sp-core-library';
 import { Link } from 'office-ui-fabric-react/lib/Link';
 //import * as strings from 'SearchRefinersWebPartStrings';
 import * as update from 'immutability-helper';
-import { ITheme } from "@uifabric/styling";
+import { ITheme, noWrap } from "@uifabric/styling";
 import { selectProperties, TextField } from "office-ui-fabric-react";
 
 //CSS
@@ -56,8 +56,8 @@ export default class DropdownTemplate extends React.Component<IBaseRefinerTempla
             {     
                 <div>
                     <Dropdown
-                        style={{maxWidth:"25%"}}
-                        styles={{dropdownOptionText:{whiteSpace:"normal",fontSize:"14px"}}}
+                        style={{}}
+                        styles={{dropdownOptionText:{whiteSpace:"hidden",fontSize:"14px"}}}
                         options={ddOptions}
                         //selectedKey={this.state.selectedItems}
                         multiSelect={true}

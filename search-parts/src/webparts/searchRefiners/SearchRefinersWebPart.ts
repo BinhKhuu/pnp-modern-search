@@ -364,7 +364,14 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                 },
                 text: 'Panel',
                 key: RefinersLayoutOption.LinkAndPanel
-            }
+            },
+            {
+                iconProps: {
+                    officeFabricIconFontName: 'GripperBarHorizontal'
+                },
+                text: 'Horizontal',
+                key: RefinersLayoutOption.Horizontal,
+            },
         ] as IPropertyPaneChoiceGroupOption[];
 
         // Sets up styling fields
