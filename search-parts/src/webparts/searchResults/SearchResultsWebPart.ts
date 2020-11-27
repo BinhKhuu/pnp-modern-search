@@ -336,7 +336,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         searchService.getSearchVerticalCounts(queryKeywords, otherVerticals, searchService.enableQueryRules).then((verticalsInfos) => {
 
                             let currentCount = results.PaginationInformation ? results.PaginationInformation.TotalRows : undefined;
-
                             if (currentCount !== undefined && currentCount !== null) {
                                 // Add current vertical infos
                                 let currentVerticalInfos: ISearchVerticalInformation = {
@@ -1809,7 +1808,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
     public getPropertyValue(propertyId: string): ISearchResultSourceData {
         const refinementResults = (this._resultService && this._resultService.results) ? this._resultService.results.RefinementResults : [];
-
         const searchResultSourceData: ISearchResultSourceData = {
             queryKeywords: this.properties.queryKeywords.tryGetValue(),
             refinementResults: refinementResults,
