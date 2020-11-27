@@ -91,7 +91,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                     }
                 }
             }
-
+            console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^",defaultSelectedFilters)
             renderElement = React.createElement(
                 SearchRefinersContainer,
                 {
@@ -349,7 +349,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
      */
     private _getStylingFields(): IPropertyPaneField<any>[] {
 
-        // Options for the search results layout
+        // Options for the search results layout order is important must match the RefinersLayoutOption order
         const layoutOptions = [
             {
                 iconProps: {
@@ -369,7 +369,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                 iconProps: {
                     officeFabricIconFontName: 'GripperBarHorizontal'
                 },
-                text: 'Horizontal',
+                text: 'Horizonta',
                 key: RefinersLayoutOption.Horizontal,
             },
         ] as IPropertyPaneChoiceGroupOption[];
@@ -512,6 +512,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                 }
             ];
         }
+        console.log("Selected Llayout", this.properties, this.properties.selectedLayout)
         this.properties.selectedLayout = this.properties.selectedLayout ? this.properties.selectedLayout : RefinersLayoutOption.Vertical;
     }
 

@@ -1,7 +1,10 @@
+/*
+    Order is important when collecting from RefinerWebpart.ts properties
+*/
 enum RefinersLayoutOption {
-    Horizontal,
     Vertical,
-    LinkAndPanel
+    LinkAndPanel,
+    Horizontal,
 }
 
 export default RefinersLayoutOption;

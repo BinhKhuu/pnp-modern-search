@@ -4,6 +4,7 @@ import IHorizontalState from './IHorizontalSate';
 import * as update from 'immutability-helper';
 import {
     GroupedList,
+    GroupShowAll,
     IGroup,
     IGroupDividerProps,
     IGroupedList
@@ -12,12 +13,12 @@ import { Link } from 'office-ui-fabric-react/lib/Link';
 import styles from './Horizontal.module.scss';
 import * as strings from 'SearchRefinersWebPartStrings';
 import TemplateRenderer from '../../Templates/TemplateRenderer';
-import { isEqual } from '@microsoft/sp-lodash-subset';
+import { groupBy, isEqual } from '@microsoft/sp-lodash-subset';
 import { ITheme } from '@uifabric/styling';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
 import { Text as TextUI } from 'office-ui-fabric-react/lib/Text';
 
-export default class Vertical extends React.Component<IFilterLayoutProps, IHorizontalState> {
+export default class Horizontal extends React.Component<IFilterLayoutProps, IHorizontalState> {
 
     private _groupedList: IGroupedList;
 
@@ -36,7 +37,6 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IHoriz
     }
 
     public render(): React.ReactElement<IFilterLayoutProps> {
-
         let noResultsElement: JSX.Element;
         const renderAvailableFilters = (this.props.refinementResults.length > 0 ) ? <GroupedList
             ref='groupedList'
@@ -69,18 +69,20 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IHoriz
                 position: 'relative',
                 maxHeight: 'inherit'
             }}>
-                <div className={styles.horizontalLayout__filterPanel__body} data-is-scrollable={true}>
-                    {this.state.nonGrouped.map((ng)=>{ 
-                        return ( 
-                            <div style={{margin: "5px",display:"inline-block", width:"30%"}}>
-                                <span className="bbRefinerTitle" style={{fontWeight:"bold"}}>{ng.name}</span>
-                                {this.state.items[ng.key]}
-                            </div>
-                            )
-                        })}
-                    {renderAvailableFilters}
-                    {renderLinkRemoveAll}
-                </div>
+
+                {this.state.nonGrouped.map((ng)=>{ 
+                return ( 
+                    <div style={{margin: "5px",display:"inline-block", width:"30%"}}>
+                        <span className="bbRefinerTitle" style={{fontWeight:"bold"}}>{ng.name}</span>
+                        {this.state.items[ng.key]}
+                    </div>
+                    )
+                })}
+                {renderAvailableFilters}
+
+                {renderLinkRemoveAll}
+
+                
             </div>
         );
     }
@@ -102,7 +104,7 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IHoriz
         this._initItems(nextProps);
 
         // Need to force an update manually because nor items or groups update will be considered as an update by the GroupedList component.
-        this._groupedList.forceUpdate();
+        if(this._groupedList ) this._groupedList.forceUpdate();
     }
 
     private _onRenderCell(nestingDepth: number, item: any, itemIndex: number) {
