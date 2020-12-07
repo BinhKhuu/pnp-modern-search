@@ -105,6 +105,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
                             hasSelectedValues={this.state.selectedRefinementFilters.length > 0 ? true : false}
                             language={this.props.language}
                             themeVariant={this.props.themeVariant}
+                            horizontalRefinerPerRow={this.props.horizontalRefinerPerRow}
                             selectedFilters={this.state.selectedRefinementFilters}
                             userService={this.props.userService}
                         />;

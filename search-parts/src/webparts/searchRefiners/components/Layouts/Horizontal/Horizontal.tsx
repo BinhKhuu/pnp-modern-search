@@ -37,22 +37,9 @@ export default class Horizontal extends React.Component<IFilterLayoutProps, IHor
     }
 
     public render(): React.ReactElement<IFilterLayoutProps> {
-        let noResultsElement: JSX.Element;
-        const renderAvailableFilters = (this.props.refinementResults.length > 0 ) ? <GroupedList
-            ref='groupedList'
-            items={this.state.items}
-            componentRef={(g) => { this._groupedList = g; }}
-            onRenderCell={this._onRenderCell}
-            className={styles.horizontalLayout__filterPanel__body__group}
-            onShouldVirtualize={() => false}
-            listProps={{ onShouldVirtualize: () => false }}
-            groupProps={
-                {
-                    onRenderHeader: this._onRenderHeader,
-
-                }
-            }
-            groups={this.state.groups} /> : noResultsElement;
+        //let noResultsElement: JSX.Element;
+        const refinerWidth = this.props.horizontalRefinerPerRow ? Math.floor(100 / this.props.horizontalRefinerPerRow) - 5 : 100;
+        var cssRefinerWidth = refinerWidth + '%';
 
         const renderLinkRemoveAll = this.props.hasSelectedValues ?
             (<div className={`${styles.horizontalLayout__filterPanel__body__removeAllFilters} ${this.props.hasSelectedValues && "hiddenLink"}`}>
@@ -105,7 +92,7 @@ export default class Horizontal extends React.Component<IFilterLayoutProps, IHor
                         })
                         return (
                             !isNotGrouped ? 
-                            <div style={{display:"inline-block", width:"30%",verticalAlign:"top", margin:"5px"}}>
+                            <div style={{display:"inline-block", width:cssRefinerWidth,verticalAlign:"top", margin:"5px"}}>
                                 <GroupedList
                                     styles={{root:{width:"100%", zIndex:1000-index, fontWeight:"bold"}}}
                                     ref='groupedList'
@@ -123,7 +110,7 @@ export default class Horizontal extends React.Component<IFilterLayoutProps, IHor
                                     groups={group} />
                             </div> : 
 
-                            <div style={{margin: "5px",display:"inline-block", width:"30%"}}>
+                            <div style={{margin: "5px",display:"inline-block",  width:cssRefinerWidth}}>
                                 <span className="bbRefinerTitle" style={{fontWeight:"bold"}}>{itemHeader}</span>
                                 {item}
                             </div>

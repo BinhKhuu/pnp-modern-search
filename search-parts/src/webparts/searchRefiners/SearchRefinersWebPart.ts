@@ -41,6 +41,8 @@ import { UserService } from '../../services/UserService/UserService';
 import { MockUserService } from '../../services/UserService/MockUserService';
 import { initializeFileTypeIcons } from '@uifabric/file-type-icons';
 import PnPTelemetry from "@pnp/telemetry-js";
+import { PropertyFieldNumber } from '@pnp/spfx-property-controls/lib/PropertyFieldNumber';
+import { MAX_COLOR_VALUE } from 'office-ui-fabric-react';
 
 export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearchRefinersWebPartProps> implements IDynamicDataCallables {
 
@@ -72,7 +74,6 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
         let queryTemplate: string = '';
         let resultSourceId: string = '';
         let defaultSelectedFilters: IRefinementFilter[] = [];
-
         if (this.properties.searchResultsDataSourceReference) {
             // If the dynamic property exists, it means the Web Part ins connected to a search results Web Part
             if (this._searchResultSourceData) {
@@ -105,6 +106,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                         this.context.dynamicDataSourceManager.notifyPropertyChanged(SearchComponentType.RefinersWebPart);
                     },
                     selectedLayout: this.properties.selectedLayout,
+                    horizontalRefinerPerRow: this.properties.horizontalRefinerPerRow,
                     language: this.context.pageContext.cultureInfo.currentUICultureName,
                     query: queryKeywords + queryTemplate + selectedProperties + resultSourceId,
                     themeVariant: this._themeVariant,
@@ -368,7 +370,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                 iconProps: {
                     officeFabricIconFontName: 'GripperBarHorizontal'
                 },
-                text: 'Horizonta',
+                text: 'Horizontal',
                 key: RefinersLayoutOption.Horizontal,
             },
         ] as IPropertyPaneChoiceGroupOption[];
@@ -385,6 +387,13 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
             PropertyPaneChoiceGroup('selectedLayout', {
                 label: strings.RefinerLayoutLabel,
                 options: layoutOptions
+            }),
+            PropertyFieldNumber('horizontalRefinerPerRow', {
+                key: 'horizontalRefinerPerRow',
+                label: 'Number of refiners per row (Horizontal layout only) Max 5',
+                value: this.properties.horizontalRefinerPerRow,
+                maxValue: 5,
+                minValue: 1
             })
         ];
 

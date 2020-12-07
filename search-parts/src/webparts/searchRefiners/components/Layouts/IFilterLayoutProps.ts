@@ -55,6 +55,11 @@ interface IFilterLayoutProps {
    * The current theme variant
    */
   themeVariant: IReadonlyTheme | undefined;
+
+  /**
+   * Items Per row
+   */
+  horizontalRefinerPerRow?: number;
 }
 
 export default IFilterLayoutProps;
