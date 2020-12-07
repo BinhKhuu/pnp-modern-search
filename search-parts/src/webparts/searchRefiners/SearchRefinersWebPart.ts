@@ -91,7 +91,6 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                     }
                 }
             }
-            console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^",defaultSelectedFilters)
             renderElement = React.createElement(
                 SearchRefinersContainer,
                 {
@@ -281,7 +280,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                             },
                             {
                                 key: RefinerTemplateOption.Dropdown,
-                                text: "Binh Dropdown option"
+                                text: "Bluebox multi-value dropdown"
                             }
                         ]
                     },
@@ -512,7 +511,6 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                 }
             ];
         }
-        console.log("Selected Llayout", this.properties, this.properties.selectedLayout)
         this.properties.selectedLayout = this.properties.selectedLayout ? this.properties.selectedLayout : RefinersLayoutOption.Vertical;
     }
 

@@ -67,22 +67,109 @@ export default class Horizontal extends React.Component<IFilterLayoutProps, IHor
             <div style={{
                 height: '100%',
                 position: 'relative',
-                maxHeight: 'inherit'
             }}>
+                <div dangerouslySetInnerHTML={{__html:
+                    `<style> 
+                        .ms-List-surface .ms-List-page{background:white; position: relative;width: 100%;} 
+                        div[id*=GroupedListSection]{ 
+                            position:absolute; 
+                            width: 100%;
+                            box-sizing: border-box;
+                            box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 2px 0px;
+                            word-break: break-all;
+                        } 
+                        span[class^='css']{
+                            font-weight: bold;
+                            font-family: "Segoe UI Web (West European)",Segoe UI,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif;
+                            font-size: 14px;
+                        }
+                    </style>`
+                    }}>
+                </div>
 
-                {this.state.nonGrouped.map((ng)=>{ 
+                {
+                    this.state.items.map((item, index)=>{
+                        var itemHeader;
+                        var isNotGrouped = this.state.nonGrouped.some((ng)=>{
+                            if(item.key == ng.key){
+                                itemHeader = ng.name;
+                            }
+                            return item.key == ng.key;
+                        });
+                        var group = [];
+                        this.state.groups.some((g)=>{
+                            if(g.key == item.key){
+                                group.push(g)
+                            }
+                            return g.key == item.key;
+                        })
+                        return (
+                            !isNotGrouped ? 
+                            <div style={{display:"inline-block", width:"30%",verticalAlign:"top", margin:"5px"}}>
+                                <GroupedList
+                                    styles={{root:{width:"100%", zIndex:1000-index, fontWeight:"bold"}}}
+                                    ref='groupedList'
+                                    items={this.state.items}//need to operate on all items values wont show up if items is specific to group, might be bug with fabric ui
+                                    componentRef={(g) => { this._groupedList = g; }}
+                                    onRenderCell={this._onRenderCell}
+                                    className={styles.horizontalLayout__filterPanel__body__group}
+                                    onShouldVirtualize={() => false}
+                                    listProps={{ onShouldVirtualize: () => false }}
+                                    groupProps={
+                                        {
+                                            onRenderHeader: this._onRenderHeader,
+                                        }
+                                    }
+                                    groups={group} />
+                            </div> : 
+
+                            <div style={{margin: "5px",display:"inline-block", width:"30%"}}>
+                                <span className="bbRefinerTitle" style={{fontWeight:"bold"}}>{itemHeader}</span>
+                                {item}
+                            </div>
+                        )
+                    })
+                }
+                {/* Old rendering for dropdown, will render dropdown refiners first
+                    this.state.nonGrouped.map((ng)=>{ 
                 return ( 
                     <div style={{margin: "5px",display:"inline-block", width:"30%"}}>
                         <span className="bbRefinerTitle" style={{fontWeight:"bold"}}>{ng.name}</span>
                         {this.state.items[ng.key]}
                     </div>
                     )
-                })}
-                {renderAvailableFilters}
+                })*/}
+                {/*renderAvailableFilters*/
+                /*  Old group rendering will render after dropdown refiners
 
+                    this.state.groups.map((g,index)=>{
+                        var thisItem = this.state.items[index];
+                        var arr = [thisItem];
+                        var garr = [g];
+                    return (
+                        <div style={{display:"inline-block", width:"30%",verticalAlign:"top", margin:"5px"}}>
+                            <GroupedList
+                                styles={{root:{width:"100%", zIndex:1000-index}}}
+                                ref='groupedList'
+                                items={this.state.items}
+                                componentRef={(g) => { this._groupedList = g; }}
+                                onRenderCell={this._onRenderCell}
+                                className={styles.horizontalLayout__filterPanel__body__group}
+                                onShouldVirtualize={() => false}
+                                listProps={{ onShouldVirtualize: () => false }}
+                                groupProps={
+                                    {
+                                        onRenderHeader: this._onRenderHeader,
+
+                                    }
+                                }
+                                groups={garr} />
+                        </div>
+                    )
+                    })
+                */   
+                }
                 {renderLinkRemoveAll}
-
-                
             </div>
         );
     }
